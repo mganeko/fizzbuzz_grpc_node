@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+//option java_multiple_files = true;
+//option java_package = "io.grpc.fizzbuzz";
+//option java_outer_classname = "FizzBUZZProto";
+//option objc_class_prefix = "FB";
+
+package fizzbuzz;
+
+// The greeting service definition.
+service FizzBuzz {
+
+  // Single FizzBuzz
+  rpc SingleFizzBuzz (FizzBuzzRequest) returns (FizzBuzzReply) {}
+
+  // Loop FizzBuzz (1 to Request.x)
+  rpc LoopFizzBuzz (FizzBuzzRequest) returns (stream FizzBuzzReply) {}
+
+  // Multiple FizzBuzz
+  rpc MultiRequestSingleResult (stream FizzBuzzRequest) returns (FizzBuzzReply) {}
+
+  // Multiple FizzBuzz
+  rpc MultiFizzBuzz (stream FizzBuzzRequest) returns (stream FizzBuzzReply) {}
+}
+
+// The request message containing x (number)
+message FizzBuzzRequest {
+  int32 x = 1;
+}
+
+// The response message containing result (string)
+message FizzBuzzReply {
+  string result = 1;
+}
