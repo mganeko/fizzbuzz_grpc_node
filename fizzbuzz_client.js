@@ -1,10 +1,12 @@
+// @ts-check
 
-//var PROTO_PATH = __dirname + '/../../protos/helloworld.proto';
-var PROTO_PATH = __dirname + '/fizzbuzz.proto';
+'use strict'
 
-var grpc = require('grpc');
-var protoLoader = require('@grpc/proto-loader');
-var packageDefinition = protoLoader.loadSync(
+const PROTO_PATH = __dirname + '/fizzbuzz.proto';
+
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
+const packageDefinition = protoLoader.loadSync(
   PROTO_PATH,
   {
     keepCase: true,
@@ -13,10 +15,14 @@ var packageDefinition = protoLoader.loadSync(
     defaults: true,
     oneofs: true
   });
-var fizzbuzz_proto = grpc.loadPackageDefinition(packageDefinition).fizzbuzz;
+const fizzbuzz_proto = grpc.loadPackageDefinition(packageDefinition).fizzbuzz;
 
+/**
+ * call diffrent type of RPC for FizzBuzzs
+ */
 function main() {
-  var client = new fizzbuzz_proto.FizzBuzz('localhost:50052',
+  // @ts-ignore
+  const client = new fizzbuzz_proto.FizzBuzz('localhost:50052',
     grpc.credentials.createInsecure());
 
   // --- single request, single return --
@@ -39,8 +45,6 @@ function main() {
   call.on('end', function () {
     console.log('end loopFizzBuzz');
   });
-
-
 
   // --- stream request, single return ---
   const callMulti = client.multiRequestSingleResult(function (err, response) {
@@ -70,9 +74,6 @@ function main() {
     callWithStream.write({ x: i });
   }
   callWithStream.end();
-
 }
-
-
 
 main();

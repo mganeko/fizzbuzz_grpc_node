@@ -105,7 +105,7 @@ function fizzbuzz(x) {
 }
 
 /**
- * Starts an RPC server that receives requests for the Greeter service at the
+ * Starts an RPC server that receives requests for the FizzBuzz service at the
  * sample server port
  */
 function main() {
