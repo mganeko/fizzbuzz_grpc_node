@@ -1,11 +1,12 @@
-//// @ts-check
+// @ts-check
 
-//var PROTO_PATH = __dirname + '/../../protos/helloworld.proto';
-var PROTO_PATH = __dirname + '/fizzbuzz.proto';
+'use strict'
 
-var grpc = require('grpc');
-var protoLoader = require('@grpc/proto-loader');
-var packageDefinition = protoLoader.loadSync(
+const PROTO_PATH = __dirname + '/fizzbuzz.proto';
+
+const grpc = require('grpc');
+const protoLoader = require('@grpc/proto-loader');
+const packageDefinition = protoLoader.loadSync(
   PROTO_PATH,
   {
     keepCase: true,
@@ -14,9 +15,13 @@ var packageDefinition = protoLoader.loadSync(
     defaults: true,
     oneofs: true
   });
-var fizzbuzz_proto = grpc.loadPackageDefinition(packageDefinition).fizzbuzz;
+const fizzbuzz_proto = grpc.loadPackageDefinition(packageDefinition).fizzbuzz;
 
-
+/**
+ * FizzBuzz RPC  for single request, single return
+ * @param {object} call
+ * @param {function} callback
+ */
 function singleFizzBuzz(call, callback) {
   const value = call.request.x;
   const result = fizzbuzz(value);
@@ -24,6 +29,11 @@ function singleFizzBuzz(call, callback) {
   callback(null, { result: result });
 }
 
+/**
+ * FizzBuzz RPC for single request, stream return
+ *  count up from 1 to specified number x
+ * @param {object} call
+ */
 function loopFizzBuzz(call) {
   const upTo = call.request.x;
   console.log('loop fizzbuzz 1 to ' + upTo);
@@ -35,6 +45,12 @@ function loopFizzBuzz(call) {
   call.end();
 }
 
+/**
+ * FizzBuzz RPC for stream request, single return
+ *  concat result for each request, and return whole result
+ * @param {object} call
+ * @param {function} callback
+ */
 function multiRequestSingleResult(call, callback) {
   console.log('--- multiRequestSingleResult start ---')
   let resultTotal = '';
@@ -50,6 +66,11 @@ function multiRequestSingleResult(call, callback) {
   });
 }
 
+/**
+ * FizzBuzz RPC for stream request, stream return
+ *  check result for each request, retuns as stream
+ * @param {object} call
+ */
 function multiFizzBuzz(call) {
   console.log('--- multiFizzBuzz start ---');
   call.on('data', function (request) {
@@ -64,6 +85,11 @@ function multiFizzBuzz(call) {
   });
 }
 
+/**
+ * function to check fizz/buzz
+ * @param {number} x
+ * @return {string}
+ */
 function fizzbuzz(x) {
   if ((x % 15) === 0) {
     return 'FizzBuzz';
@@ -75,7 +101,7 @@ function fizzbuzz(x) {
     return 'Buzz';
   }
 
-  return x;
+  return x + '';
 }
 
 /**
@@ -83,9 +109,9 @@ function fizzbuzz(x) {
  * sample server port
  */
 function main() {
-  var server = new grpc.Server();
+  const server = new grpc.Server();
+  // @ts-ignore
   server.addService(fizzbuzz_proto.FizzBuzz.service,
-    //server.addProtoService(fizzbuzz_proto.FizzBuzz.service,
     {
       singleFizzBuzz: singleFizzBuzz,
       loopFizzBuzz: loopFizzBuzz,
