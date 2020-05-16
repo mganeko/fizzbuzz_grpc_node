@@ -25,6 +25,7 @@ function main() {
   const client = new fizzbuzz_proto.FizzBuzz('localhost:50052',
     grpc.credentials.createInsecure());
 
+  // /* ---
   // --- single request, single return --
   for (let i = 1; i <= 20; i++) {
     client.singleFizzBuzz({ x: i }, function (err, response) {
@@ -36,7 +37,9 @@ function main() {
       }
     });
   }
+  // --- */
 
+  // /*--
   // --- single request, stream return ---
   const call = client.loopFizzBuzz({ x: 30 });
   call.on('data', function (result) {
@@ -45,7 +48,9 @@ function main() {
   call.on('end', function () {
     console.log('end loopFizzBuzz');
   });
+  // --*/
 
+  // /*--
   // --- stream request, single return ---
   const callMulti = client.multiRequestSingleResult(function (err, response) {
     if (err) {
@@ -60,7 +65,9 @@ function main() {
     callMulti.write({ x: i });
   }
   callMulti.end();
+  // --*/
 
+  // /*--
   // --- stream request, stream return ---
   const callWithStream = client.multiFizzBuzz();
   callWithStream.on('data', function (result) {
@@ -74,6 +81,7 @@ function main() {
     callWithStream.write({ x: i });
   }
   callWithStream.end();
+  // ---*/
 }
 
 main();
