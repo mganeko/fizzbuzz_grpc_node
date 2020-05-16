@@ -120,6 +120,7 @@ function main() {
     }
   );
   server.bind('0.0.0.0:50052', grpc.ServerCredentials.createInsecure());
+  //server.bind('0.0.0.0:9090', grpc.ServerCredentials.createInsecure()); // envoy.proxy
   server.start();
 }
 

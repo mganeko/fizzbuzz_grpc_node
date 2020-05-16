@@ -23,6 +23,7 @@ const fizzbuzz_proto = grpc.loadPackageDefinition(packageDefinition).fizzbuzz;
 function main() {
   // @ts-ignore
   const client = new fizzbuzz_proto.FizzBuzz('localhost:50052',
+    //const client = new fizzbuzz_proto.FizzBuzz('localhost:8080', // envoy proxy
     grpc.credentials.createInsecure());
 
   // /* ---
